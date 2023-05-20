@@ -156,7 +156,7 @@ public:
     
 };
 
-
+// khởi tạo hàm main 
 int main() {
     for (int i=1; i<=10; i++){
         string filename = "data" + to_string(i) + ".txt";
