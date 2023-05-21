@@ -1,33 +1,41 @@
 #include <iostream>
 #include <fstream>
-#include <cstdlib>
-#include <ctime>
+#include <random>
+#include <set>
+#include <vector>
+#include <algorithm>
 using namespace std;
-
-// Hàm tạo bộ dữ liệu ngẫu nhiên với kích thước size và lưu vào tệp filename
-void generateRandomData(int size, string filename) {
-    ofstream outputFile(filename);
-    if (outputFile.is_open()) {
-        srand(time(nullptr));   // Khởi tạo seed cho hàm sinh số ngẫu nhiên
-        for (int i = 0; i < size; i++) {
-            int value = rand() % 1000000;   // Sinh số ngẫu nhiên trong khoảng từ 0 đến 999999
-            outputFile << value<< endl;  // Ghi giá trị vào tệp văn bản
-        }
-        outputFile.close();
-    }
-    else {
-        cout << "Không thể mở tệp!" << endl;
-    }
-}
-
-
 int main() {
-    // Tạo 10 bộ dữ liệu ngẫu nhiên với mỗi bộ có 10^6 giá trị
-    for (int i = 1; i <= 10; i++) {
-        string filename = "data" + to_string(i) + ".txt";
-        
-            generateRandomData(1000000, filename);
-        
+    const int num_datasets = 10;
+    const int dataset_size = 1000000;
+
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<int> dist(1, 1000000000);
+
+    for (int i = 0; i < num_datasets; ++i) {
+        vector<int> dataset;
+
+        for (int j = 0; j < dataset_size; ++j) {
+            dataset.push_back(dist(gen));
+        }
+
+        shuffle(dataset.begin(), dataset.end(), gen);
+
+        string filename = "data" + to_string(i+1) + ".txt";
+        ofstream outfile(filename);
+
+        if (outfile.is_open()) {
+            for (int x : dataset) {
+                outfile << x << endl;
+            }
+            outfile.close();
+        }
+        else {
+            cout << "Unable to open file " << filename << endl;
+            return 1;
+        }
     }
+
     return 0;
 }
